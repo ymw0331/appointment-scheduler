@@ -1,0 +1,893 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "AppController_getHello",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "App"
+                ]
+            }
+        },
+        "/config": {
+            "get": {
+                "operationId": "ConfigController_getConfig",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Current system configuration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get current configuration",
+                "tags": [
+                    "Config"
+                ]
+            },
+            "put": {
+                "operationId": "ConfigController_updateConfig",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateConfigDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Configuration updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConfigResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid configuration data"
+                    }
+                },
+                "summary": "Update system configuration",
+                "tags": [
+                    "Config"
+                ]
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Returns API health status, database connectivity, and system information",
+                "operationId": "HealthController_getHealth",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Service is healthy",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "status": "ok",
+                                    "timestamp": "2025-01-05T12:30:00.000Z",
+                                    "uptime": 120.5,
+                                    "database": {
+                                        "status": "connected",
+                                        "version": "PostgreSQL 16.1 on x86_64-pc-linux-gnu"
+                                    },
+                                    "memory": {
+                                        "used": 45.2,
+                                        "total": 128
+                                    },
+                                    "environment": "development"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Health check endpoint",
+                "tags": [
+                    "Health"
+                ]
+            }
+        },
+        "/availability": {
+            "get": {
+                "operationId": "AvailabilityController_get",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "example": "2025-01-15",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of slots with availability",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AvailabilitySlotDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get availability for a date",
+                "tags": [
+                    "Availability"
+                ]
+            }
+        },
+        "/appointments": {
+            "post": {
+                "description": "Creates a new appointment with validation for time slots, conflicts, and availability",
+                "operationId": "AppointmentsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAppointmentDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment booked successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AppointmentResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid booking data (time alignment, operational hours)"
+                    },
+                    "409": {
+                        "description": "Booking conflict (time slot already taken)"
+                    }
+                },
+                "summary": "Book an appointment",
+                "tags": [
+                    "Appointments"
+                ]
+            },
+            "get": {
+                "description": "Get all appointments, optionally filtered by date",
+                "operationId": "AppointmentsController_list",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "required": false,
+                        "in": "query",
+                        "description": "Filter appointments by date (optional)",
+                        "schema": {
+                            "example": "2025-01-15",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of appointments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AppointmentResponseDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List appointments",
+                "tags": [
+                    "Appointments"
+                ]
+            }
+        },
+        "/appointments/{id}": {
+            "delete": {
+                "operationId": "AppointmentsController_cancel",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Appointment ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Appointment cancelled successfully"
+                    },
+                    "404": {
+                        "description": "Appointment not found"
+                    }
+                },
+                "summary": "Cancel an appointment",
+                "tags": [
+                    "Appointments"
+                ]
+            }
+        },
+        "/admin/days-off": {
+            "post": {
+                "description": "Mark a specific date as unavailable for appointments (holiday, closure, etc.)",
+                "operationId": "AdminDaysOffController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDayOffDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Day off created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DayOffResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Day off already exists for this date"
+                    }
+                },
+                "summary": "Add a day off",
+                "tags": [
+                    "Admin - Days Off"
+                ]
+            },
+            "get": {
+                "operationId": "AdminDaysOffController_getAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "List of all days off",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DayOffResponseDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List all days off",
+                "tags": [
+                    "Admin - Days Off"
+                ]
+            }
+        },
+        "/admin/days-off/{id}": {
+            "put": {
+                "operationId": "AdminDaysOffController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Day off ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDayOffDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Day off updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DayOffResponseDto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Day off not found"
+                    }
+                },
+                "summary": "Update a day off",
+                "tags": [
+                    "Admin - Days Off"
+                ]
+            },
+            "delete": {
+                "operationId": "AdminDaysOffController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Day off ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Day off removed successfully"
+                    },
+                    "404": {
+                        "description": "Day off not found"
+                    }
+                },
+                "summary": "Remove a day off",
+                "tags": [
+                    "Admin - Days Off"
+                ]
+            }
+        },
+        "/admin/unavailable": {
+            "post": {
+                "operationId": "AdminUnavailableController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUnavailableWindowDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnavailableWindowResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Create an unavailable window (weekday or date)",
+                "tags": [
+                    "Admin - Unavailable"
+                ]
+            },
+            "get": {
+                "operationId": "AdminUnavailableController_list",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UnavailableWindowResponseDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "List unavailable windows",
+                "tags": [
+                    "Admin - Unavailable"
+                ]
+            }
+        },
+        "/admin/unavailable/{id}": {
+            "put": {
+                "operationId": "AdminUnavailableController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUnavailableWindowDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnavailableWindowResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Update an unavailable window",
+                "tags": [
+                    "Admin - Unavailable"
+                ]
+            },
+            "delete": {
+                "operationId": "AdminUnavailableController_remove",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "summary": "Delete an unavailable window",
+                "tags": [
+                    "Admin - Unavailable"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Appointment Scheduler API",
+        "description": "Production-ready appointment scheduling system",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [
+        {
+            "name": "Config",
+            "description": "Runtime configuration management"
+        },
+        {
+            "name": "Availability",
+            "description": "Check available appointment slots"
+        },
+        {
+            "name": "Appointments",
+            "description": "Book and manage appointments"
+        },
+        {
+            "name": "Admin - Days Off",
+            "description": "Manage holidays and closures"
+        },
+        {
+            "name": "Admin - Unavailable",
+            "description": "Manage unavailable time windows"
+        },
+        {
+            "name": "Health",
+            "description": "Health check endpoints"
+        }
+    ],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "ConfigResponseDto": {
+                "type": "object",
+                "properties": {
+                    "slotDurationMinutes": {
+                        "type": "number",
+                        "example": 30,
+                        "description": "Duration of each appointment slot in minutes"
+                    },
+                    "maxSlotsPerAppointment": {
+                        "type": "number",
+                        "example": 1,
+                        "description": "Maximum number of slots per appointment (1-5)"
+                    },
+                    "operationalDays": {
+                        "example": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "description": "Operational days (1=Monday, 7=Sunday)",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "operationalStartTime": {
+                        "type": "string",
+                        "example": "09:00",
+                        "description": "Start of operational hours (HH:mm)"
+                    },
+                    "operationalEndTime": {
+                        "type": "string",
+                        "example": "18:00",
+                        "description": "End of operational hours (HH:mm)"
+                    },
+                    "updatedAt": {
+                        "format": "date-time",
+                        "type": "string",
+                        "description": "When this configuration was last updated"
+                    }
+                },
+                "required": [
+                    "slotDurationMinutes",
+                    "maxSlotsPerAppointment",
+                    "operationalDays",
+                    "operationalStartTime",
+                    "operationalEndTime",
+                    "updatedAt"
+                ]
+            },
+            "UpdateConfigDto": {
+                "type": "object",
+                "properties": {
+                    "slotDurationMinutes": {
+                        "type": "number",
+                        "example": 30,
+                        "description": "Duration of each appointment slot in minutes (5-60)",
+                        "minimum": 5,
+                        "maximum": 60
+                    },
+                    "maxSlotsPerAppointment": {
+                        "type": "number",
+                        "example": 2,
+                        "description": "Maximum number of slots per appointment",
+                        "minimum": 1,
+                        "maximum": 5
+                    },
+                    "operationalDays": {
+                        "example": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "description": "Operational days (1=Monday, 7=Sunday)",
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "operationalStartTime": {
+                        "type": "string",
+                        "example": "09:00",
+                        "description": "Start of operational hours (HH:mm format)"
+                    },
+                    "operationalEndTime": {
+                        "type": "string",
+                        "example": "18:00",
+                        "description": "End of operational hours (HH:mm format)"
+                    }
+                }
+            },
+            "AvailabilitySlotDto": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-15"
+                    },
+                    "time": {
+                        "type": "string",
+                        "example": "09:00"
+                    },
+                    "available_slots": {
+                        "type": "number",
+                        "example": 1,
+                        "description": "0 = not available, 1 = available"
+                    }
+                },
+                "required": [
+                    "date",
+                    "time",
+                    "available_slots"
+                ]
+            },
+            "CreateAppointmentDto": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-15",
+                        "description": "Appointment date in YYYY-MM-DD format"
+                    },
+                    "time": {
+                        "type": "string",
+                        "example": "14:30",
+                        "description": "Start time in HH:mm format, must align to slot grid"
+                    },
+                    "slots": {
+                        "type": "number",
+                        "example": 2,
+                        "description": "Number of consecutive slots to book (1-5)",
+                        "minimum": 1,
+                        "maximum": 5
+                    },
+                    "customerName": {
+                        "type": "string",
+                        "example": "John Doe",
+                        "description": "Customer name (optional)"
+                    },
+                    "customerEmail": {
+                        "type": "string",
+                        "example": "john@example.com",
+                        "description": "Customer email (optional)"
+                    }
+                },
+                "required": [
+                    "date",
+                    "time",
+                    "slots"
+                ]
+            },
+            "AppointmentResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-15"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "example": "14:30"
+                    },
+                    "slotCount": {
+                        "type": "number",
+                        "example": 2,
+                        "description": "Number of slots booked"
+                    },
+                    "customerName": {
+                        "type": "string",
+                        "example": "John Doe",
+                        "nullable": true
+                    },
+                    "customerEmail": {
+                        "type": "string",
+                        "example": "john@example.com",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string",
+                        "description": "When the appointment was created"
+                    }
+                },
+                "required": [
+                    "id",
+                    "date",
+                    "startTime",
+                    "slotCount",
+                    "customerName",
+                    "customerEmail",
+                    "createdAt"
+                ]
+            },
+            "CreateDayOffDto": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "example": "2025-12-25",
+                        "description": "Date to mark as day off (YYYY-MM-DD)"
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Christmas Day",
+                        "description": "Optional note about the day off",
+                        "maxLength": 255
+                    }
+                },
+                "required": [
+                    "date"
+                ]
+            },
+            "DayOffResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2025-12-25"
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Christmas Day",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string",
+                        "description": "When this day off was created"
+                    }
+                },
+                "required": [
+                    "id",
+                    "date",
+                    "note",
+                    "createdAt"
+                ]
+            },
+            "UpdateDayOffDto": {
+                "type": "object",
+                "properties": {
+                    "note": {
+                        "type": "string",
+                        "example": "Christmas Day (Updated)",
+                        "description": "Update the note about the day off",
+                        "maxLength": 255
+                    }
+                }
+            },
+            "CreateUnavailableWindowDto": {
+                "type": "object",
+                "properties": {
+                    "weekday": {
+                        "type": "number",
+                        "example": 1,
+                        "description": "Weekday (1=Mon ... 7=Sun). Provide this OR date."
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-15",
+                        "description": "Specific date (YYYY-MM-DD). Provide this OR weekday."
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "example": "12:30"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "example": "13:30"
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Lunch",
+                        "maxLength": 255
+                    }
+                },
+                "required": [
+                    "startTime",
+                    "endTime"
+                ]
+            },
+            "UnavailableWindowResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "uuid"
+                    },
+                    "weekday": {
+                        "type": "number",
+                        "example": 3,
+                        "nullable": true
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-16",
+                        "nullable": true
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "example": "12:30"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "example": "13:30"
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Lunch",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "weekday",
+                    "date",
+                    "startTime",
+                    "endTime",
+                    "note",
+                    "createdAt"
+                ]
+            },
+            "UpdateUnavailableWindowDto": {
+                "type": "object",
+                "properties": {
+                    "weekday": {
+                        "type": "number",
+                        "example": 3
+                    },
+                    "date": {
+                        "type": "string",
+                        "example": "2025-01-16"
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "example": "12:30"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "example": "13:30"
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Team lunch",
+                        "maxLength": 255
+                    }
+                }
+            }
+        }
+    }
+}

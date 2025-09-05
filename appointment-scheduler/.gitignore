@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+
+# Runtime files
+temp/
+*.log
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Demo and personal files
+DEMO_PLAN.md

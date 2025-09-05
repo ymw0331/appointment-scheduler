@@ -46,21 +46,21 @@ export class TimeUtils {
   // }
 
   static parseDate(dateStr: string): Date {
-    // Force local timezone parsing to avoid date shifts
+    // Parse in UTC to avoid timezone conversion issues with PostgreSQL
     const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day); // month is 0-indexed
+    return new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed, use UTC
   }
 
   static getDayOfWeek(date: Date): number {
-    const d = date.getDay(); // 0=Sun..6=Sat
+    const d = date.getUTCDay(); // 0=Sun..6=Sat, use UTC to match our date parsing
     return d === 0 ? 7 : d;  // 1=Mon..7=Sun
   }
 
   static formatDate(date: Date): string {
-    // Use local timezone formatting to avoid UTC conversion
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
+    // Use UTC methods to match how we parse dates
+    const year = date.getUTCFullYear();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = date.getUTCDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
 
