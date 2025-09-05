@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './modules/config/config.module';
 import { HealthModule } from './modules/health/health.module';
+import { AvailabilityModule } from './modules/appointments/availability.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 
@@ -19,6 +20,7 @@ import mikroOrmConfig from './mikro-orm.config';
     MikroOrmModule.forRoot(mikroOrmConfig),
     ConfigModule,
     HealthModule,
+    AvailabilityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

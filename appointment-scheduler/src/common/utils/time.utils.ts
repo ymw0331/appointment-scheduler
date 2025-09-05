@@ -40,4 +40,19 @@ export class TimeUtils {
     const slotEnd = slotStart + slotDuration * slotCount;
     return slotStart < windowEnd && slotEnd > windowStart;
   }
+
+  // static parseDate(dateStr: string): Date {
+  //   return new Date(dateStr); // expects ISO YYYY-MM-DD
+  // }
+
+  static parseDate(dateStr: string): Date {
+    // Force local timezone parsing instead of UTC
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day); // month is 0-indexed
+  }
+  
+  static getDayOfWeek(date: Date): number {
+    const d = date.getDay(); // 0=Sun..6=Sat
+    return d === 0 ? 7 : d;  // 1=Mon..7=Sun
+  }
 }
