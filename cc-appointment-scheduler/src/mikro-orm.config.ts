@@ -9,6 +9,13 @@ export default defineConfig({
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
+  // Enable schema synchronization for development
+  ensureDatabase: true,
+  schemaGenerator: {
+    disableForeignKeys: false,
+    createForeignKeyConstraints: true,
+    ignoreSchema: [],
+  },
   migrations: {
     path: path.join(__dirname, './migrations'),
     pathTs: path.join(__dirname, './migrations'),
@@ -20,7 +27,6 @@ export default defineConfig({
     safe: false,
     snapshot: true,
     emit: 'ts',
-    generator: Migrator,
   },
   debug: process.env.NODE_ENV === 'development',
   strict: true,

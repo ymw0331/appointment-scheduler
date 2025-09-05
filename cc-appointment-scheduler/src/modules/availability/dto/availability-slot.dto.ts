@@ -5,13 +5,13 @@ export class AvailabilitySlotDto {
     description: 'Date in YYYY-MM-DD format',
     example: '2024-04-04',
   })
-  date: string;
+  date!: string;
 
   @ApiProperty({
     description: 'Time slot in HH:mm format',
     example: '10:00',
   })
-  time: string;
+  time!: string;
 
   @ApiProperty({
     description: 'Number of available slots (0 = booked, 1 = available)',
@@ -19,5 +19,5 @@ export class AvailabilitySlotDto {
     minimum: 0,
     maximum: 1,
   })
-  available_slots: number;
+  available_slots!: number;
 }

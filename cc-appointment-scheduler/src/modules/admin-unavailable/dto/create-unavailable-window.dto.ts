@@ -35,7 +35,7 @@ export class CreateUnavailableWindowDto {
   @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: 'Start time must be in HH:mm format',
   })
-  startTime: string;
+  startTime!: string;
 
   @ApiProperty({
     description: 'End time in HH:mm format',
@@ -45,7 +45,7 @@ export class CreateUnavailableWindowDto {
   @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: 'End time must be in HH:mm format',
   })
-  endTime: string;
+  endTime!: string;
 
   @ApiProperty({
     description: 'Optional note about the unavailable window',

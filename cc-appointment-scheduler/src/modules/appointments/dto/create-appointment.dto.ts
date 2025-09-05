@@ -10,7 +10,7 @@ export class CreateAppointmentDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'Date must be in YYYY-MM-DD format',
   })
-  date: string;
+  date!: string;
 
   @ApiProperty({
     description: 'Appointment start time in HH:mm format',
@@ -20,7 +20,7 @@ export class CreateAppointmentDto {
   @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
     message: 'Time must be in HH:mm format',
   })
-  time: string;
+  time!: string;
 
   @ApiProperty({
     description: 'Number of contiguous slots to book',
@@ -31,7 +31,7 @@ export class CreateAppointmentDto {
   @IsInt()
   @Min(1)
   @Max(5)
-  slots: number;
+  slots!: number;
 
   @ApiProperty({
     description: 'Customer name',
