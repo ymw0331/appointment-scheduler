@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from './modules/config/config.module';
 import { HealthModule } from './modules/health/health.module';
 import { AvailabilityModule } from './modules/appointments/availability.module';
+import { AppointmentsModule } from './modules/appointments/appointments.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 
@@ -21,6 +22,7 @@ import mikroOrmConfig from './mikro-orm.config';
     ConfigModule,
     HealthModule,
     AvailabilityModule,
+    AppointmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -21,4 +21,17 @@ export class Appointment {
 
   @Property({ nullable: true })
   customerEmail?: string;
+
+  @Property({ type: 'datetime', onCreate: () => new Date() })
+  createdAt: Date = new Date();
+
+  @Property({ type: 'datetime', onUpdate: () => new Date() })
+  updatedAt: Date = new Date();
+
+  // Constructor to support partial initialization
+  constructor(partial?: Partial<Appointment>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }

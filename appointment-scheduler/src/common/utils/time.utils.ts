@@ -55,4 +55,8 @@ export class TimeUtils {
     const d = date.getDay(); // 0=Sun..6=Sat
     return d === 0 ? 7 : d;  // 1=Mon..7=Sun
   }
+
+  static formatDate(date: Date): string {
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+  }
 }
