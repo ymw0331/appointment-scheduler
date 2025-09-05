@@ -46,17 +46,26 @@ export class TimeUtils {
   // }
 
   static parseDate(dateStr: string): Date {
-    // Force local timezone parsing instead of UTC
+    // Force local timezone parsing to avoid date shifts
     const [year, month, day] = dateStr.split('-').map(Number);
     return new Date(year, month - 1, day); // month is 0-indexed
   }
-  
+
   static getDayOfWeek(date: Date): number {
     const d = date.getDay(); // 0=Sun..6=Sat
     return d === 0 ? 7 : d;  // 1=Mon..7=Sun
   }
 
   static formatDate(date: Date): string {
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+    // Use local timezone formatting to avoid UTC conversion
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  static formatTime(timeStr: string): string {
+    // Remove seconds if present (14:30:00 -> 14:30)
+    return timeStr.substring(0, 5);
   }
 }

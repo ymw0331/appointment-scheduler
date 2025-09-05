@@ -123,7 +123,7 @@ export class AppointmentsService {
     return {
       id: appointment.id,
       date: TimeUtils.formatDate(appointment.date),
-      startTime: appointment.startTime,
+      startTime: TimeUtils.formatTime(appointment.startTime),
       slotCount: appointment.slotCount,
       customerName: appointment.customerName,
       customerEmail: appointment.customerEmail,
