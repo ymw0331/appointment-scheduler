@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Generated files
+*.generated.ts
+*.d.ts
+
+# Coverage
+coverage/
+
+# Migrations (auto-generated)
+src/migrations/
+
+# Logs
+*.log
