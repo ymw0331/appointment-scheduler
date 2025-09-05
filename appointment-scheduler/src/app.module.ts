@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './modules/config/config.module';
 import { HealthModule } from './modules/health/health.module';
-import { AvailabilityModule } from './modules/appointments/availability.module';
+import { AvailabilityModule } from './modules/availability/availability.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AdminDaysOffModule } from './modules/admin-days-off/admin-days-off.module';
 import { AdminUnavailableModule } from './modules/admin-unavailable/admin-unavailable.module';

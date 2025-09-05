@@ -3,7 +3,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { ConfigService } from '../config/config.service';
 import { TimeUtils } from '../../common/utils/time.utils';
 import { AvailabilitySlotDto } from './dto/availability-slot.dto';
-import { Appointment } from './entities/appointment.entity';
+import { Appointment } from '../appointments/entities/appointment.entity';
 import { DayOff } from '../admin-days-off/entities/day-off.entity';
 import { UnavailableWindow } from '../admin-unavailable/entities/unavailable-window.entity';
 
@@ -20,12 +20,9 @@ export class AvailabilityService {
 
     // 1) Not an operational day → empty
     const weekday = TimeUtils.getDayOfWeek(date);
-    // console.log(`Date: ${dateStr}, parsed: ${date}, weekday: ${weekday}, operational: ${cfg.operationalDays}`);
 
-
-    // if (!cfg.operationalDays.includes(weekday)) return [];
     const operationalDaysNumbers = cfg.operationalDays.map(d => typeof d === 'string' ? parseInt(d, 10) : d);
-if (!operationalDaysNumbers.includes(weekday)) return [];
+    if (!operationalDaysNumbers.includes(weekday)) return [];
 
     // 2) Day off → empty
     const dayOff = await this.em.findOne(DayOff, { date });
