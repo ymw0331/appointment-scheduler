@@ -4,6 +4,9 @@ import { ConfigService } from './config.service';
 import { ConfigResponseDto } from './dto/config-response.dto';
 import { UpdateConfigDto } from './dto/update-config.dto';
 
+// GET /config: returns the current effective config.
+// PUT /config: updates any subset of fields with validation (DTO). Swagger metadata included.
+
 @ApiTags('Config')
 @Controller('config')
 export class ConfigController {

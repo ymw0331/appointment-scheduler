@@ -1,6 +1,8 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 as uuid } from 'uuid';
 
+// Fields: slotDurationMinutes, maxSlotsPerAppointment, operationalDays, operationalStartTime, operationalEndTime, timestamps, and a constructor for partial assignment.
+
 @Entity()
 export class AppConfig {
   @PrimaryKey({ type: 'uuid' })

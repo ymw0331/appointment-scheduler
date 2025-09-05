@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+// Swagger response shape.
 export class ConfigResponseDto {
   @ApiProperty({ example: 30, description: 'Duration of each appointment slot in minutes' })
   slotDurationMinutes: number;

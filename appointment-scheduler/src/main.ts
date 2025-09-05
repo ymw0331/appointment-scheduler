@@ -4,6 +4,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 
+// sets helmet, ValidationPipe, CORS, and Swagger at /docs.
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, Min, Max, IsArray, IsString, Matches, ArrayMinSize, ArrayMaxSize, IsOptional } from 'class-validator';
 
+
+// all fields optional but validated (@IsOptional(), ranges, HH:mm format).
+
 export class UpdateConfigDto {
   @ApiProperty({ 
     example: 30, 

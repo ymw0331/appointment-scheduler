@@ -4,6 +4,8 @@ import { ConfigController } from './config.controller';
 import { ConfigService } from './config.service';
 import { AppConfig } from './entities/app-config.entity';
 
+// Registers AppConfig with MikroORM, provides ConfigService, exposes ConfigController.
+
 @Module({
   imports: [MikroOrmModule.forFeature([AppConfig])],
   controllers: [ConfigController],

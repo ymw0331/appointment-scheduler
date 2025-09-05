@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { ConfigModule } from './modules/config/config.module';
 import mikroOrmConfig from './mikro-orm.config';
 
+
+//  imports Nest ConfigModule, MikroORM root, and our ConfigModule.
+
 @Module({
   imports: [
     NestConfigModule.forRoot({

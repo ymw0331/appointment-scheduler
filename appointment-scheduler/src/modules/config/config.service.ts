@@ -5,6 +5,12 @@ import { UpdateConfigDto } from './dto/update-config.dto';
 import { ConfigResponseDto } from './dto/config-response.dto';
 import { TimeUtils } from '../../common/utils/time.utils';
 
+// Ensures there is exactly one AppConfig row (creates default if none).
+// Validates operational time window via TimeUtils.timeToMinutes.
+// Uses env fallbacks in getEffectiveConfig() if DB is empty.
+// Uses em.find(AppConfig,{}) and picks the first record (avoids MikroORM “empty where” error).
+
+
 @Injectable()
 export class ConfigService {
   constructor(private readonly em: EntityManager) { }
