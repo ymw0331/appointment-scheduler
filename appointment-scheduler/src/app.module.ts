@@ -4,6 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './modules/config/config.module';
+import { HealthModule } from './modules/health/health.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 
@@ -17,6 +18,7 @@ import mikroOrmConfig from './mikro-orm.config';
     }),
     MikroOrmModule.forRoot(mikroOrmConfig),
     ConfigModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
