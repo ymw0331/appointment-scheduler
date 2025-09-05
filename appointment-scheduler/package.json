@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:migrate": "mikro-orm migration:up",
     "db:migration:create": "mikro-orm migration:create",
-    "db:reset": "mikro-orm schema:drop --run && mikro-orm migration:up"
+    "db:reset": "mikro-orm schema:drop --run && mikro-orm migration:up",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "mikro-orm": {
     "useTsNode": true,

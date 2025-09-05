@@ -4,7 +4,8 @@ import path from 'path';
 
 export default defineConfig({
   driver: PostgreSqlDriver,
-  clientUrl: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/appointments',
+  clientUrl:
+    process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/appointments',
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,

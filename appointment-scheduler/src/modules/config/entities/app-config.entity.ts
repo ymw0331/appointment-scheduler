@@ -13,7 +13,7 @@ export class AppConfig {
   maxSlotsPerAppointment: number = 1;
 
   @Property({ type: 'array', default: [1, 2, 3, 4, 5] })
-  operationalDays: number[] = [1, 2, 3, 4, 5]; // Mon-Fri
+  operationalDays: number[] = [1, 2, 3, 4, 5];
 
   @Property({ type: 'time', default: '09:00' })
   operationalStartTime: string = '09:00';
@@ -26,4 +26,11 @@ export class AppConfig {
 
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
+
+  // Add constructor to support partial initialization
+  constructor(partial?: Partial<AppConfig>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
 }
